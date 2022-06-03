@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Manager\UserManager;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 
 class WorldController extends AbstractController
 {
@@ -15,11 +16,10 @@ class WorldController extends AbstractController
         $this->userManager = $userManager;
     }
 
-    /**
-     * @throws JsonException
-     */
     public function hello(): Response
     {
-        return $this->render('user-vue.twig', ['users' => json_encode($this->userManager->getUsersListVue(), JSON_THROW_ON_ERROR)]);
+        $users = $this->userManager->findUsersByCriteria('J.R.R. Tolkien');
+
+        return $this->json(array_map(static fn(User $user) => $user->toArray(), $users));
     }
 }
