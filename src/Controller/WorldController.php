@@ -18,8 +18,10 @@ class WorldController extends AbstractController
 
     public function hello(): Response
     {
-        $user = $this->userManager->create('J.R.R. Tolkien');
-
+        $user = $this->userManager->create('Terry Pratchett');
+        sleep(1);
+        $this->userManager->updateUserLogin($user->getId(), 'Lewis Carroll');
+        
         return $this->json($user->toArray());
     }
 }
