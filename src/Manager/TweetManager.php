@@ -2,10 +2,11 @@
 
 namespace App\Manager;
 
+use App\Entity\Tweet;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
-class UserManager
+class TweetManager
 {
     private EntityManagerInterface $entityManager;
 
@@ -14,15 +15,14 @@ class UserManager
         $this->entityManager = $entityManager;
     }
 
-    public function create(string $login): User
+    public function postTweet(User $author, string $text): void
     {
-        $user = new User();
-        $user->setLogin($login);
-        $user->setCreatedAt();
-        $user->setUpdatedAt();
-        $this->entityManager->persist($user);
+        $tweet = new Tweet();
+        $tweet->setAuthor($author);
+        $tweet->setText($text);
+        $tweet->setCreatedAt();
+        $tweet->setUpdatedAt();
+        $this->entityManager->persist($tweet);
         $this->entityManager->flush();
-
-        return $user;
     }
 }
