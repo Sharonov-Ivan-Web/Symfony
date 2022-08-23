@@ -2,26 +2,31 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Manager\UserManager;
+use App\Service\UserBuilderService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
 class WorldController extends AbstractController
 {
     private UserManager $userManager;
+    
+    private UserBuilderService $userBuilderService;
 
-    public function __construct(UserManager $userManager)
+    public function __construct(UserManager $userManager, UserBuilderService $userBuilderService)
     {
         $this->userManager = $userManager;
+        $this->userBuilderService = $userBuilderService;
     }
 
     public function hello(): Response
     {
-        $user = $this->userManager->create('Terry Pratchett');
-        sleep(1);
-        $this->userManager->updateUserLogin($user->getId(), 'Lewis Carroll');
-        
-        return $this->json($user->toArray());
+        $user = $this->userBuilderService->createUserWithTweets(
+            'Charles Dickens',
+            ['Oliver Twist', 'The Christmas Carol']
+        );
+        $userData = $this->userManager->findUserWithTweetsWithDBALQueryBuilder($user->getId());
+
+        return $this->json($userData);
     }
 }
