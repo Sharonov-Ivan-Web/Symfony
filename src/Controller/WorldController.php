@@ -15,8 +15,11 @@ class WorldController extends AbstractController
         $this->userManager = $userManager;
     }
 
+    /**
+     * @throws JsonException
+     */
     public function hello(): Response
     {
-        return $this->render('user-table.twig', ['users' => $this->userManager->getUserList()]);
+        return $this->render('user-vue.twig', ['users' => json_encode($this->userManager->getUsersListVue(), JSON_THROW_ON_ERROR)]);
     }
 }
